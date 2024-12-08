@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import financialData from './assets/financial_data.json'; // Import the JSON file
+import BarChart from './components/BarChart';
+import LineChart from './components/LineChart';
+import ScatterChart from './components/ScatterChart';
+import BubbleChart from './components/BubbleChart';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [chartData, setChartData] = useState(null); // State to store the financial data
+    const [loading, setLoading] = useState(true);     // State to track loading status
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    // Load the financial data when the component mounts
+    useEffect(() => {
+        setChartData(financialData); // Set the financial data to chartData state
+        setLoading(false);           // Update loading state to false
+    }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-export default App
+    // Show a loading message while the data is being loaded
+    if (loading) return <p>Loading charts...</p>;
+
+    return (
+        <div className="dashboard">
+            <h1>Financial Data Dashboard</h1>
+            <div className="chart-grid">
+                <div className="chart-item"><BarChart data={chartData} /></div>
+                <div className="chart-item"><LineChart data={chartData} /></div>
+                <div className="chart-item"><ScatterChart data={chartData} /></div>
+                <div className="chart-item"><BubbleChart data={chartData} /></div>
+            </div>
+        </div>
+    );
+};
+
+export default App;
